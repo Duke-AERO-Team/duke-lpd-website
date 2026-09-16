@@ -17,9 +17,10 @@ import enoCnc from "../assets/projects/eno/clamshell-half-in-the-cnc.webp";
 import enoOpened from "../assets/projects/eno/clamshell-halves-opened.webp";
 import enoInspecting from "../assets/projects/eno/inspecting-the-clamshell-halves.webp";
 import enoContour from "../assets/projects/eno/machined-clamshell-contour.webp";
-import prometheusCover from "../assets/projects/prometheus/regen-chamber-upright.webp";
-import prometheusCutting from "../assets/projects/prometheus/cutting-regen-cooling-channels.webp";
-import prometheusChannels from "../assets/projects/prometheus/regen-chamber-cooling-channels.webp";
+import prometheusCover from "../assets/projects/prometheus/machined-tank-closure.webp";
+import prometheusBoring from "../assets/projects/prometheus/cutting-a-bore-on-the-lathe.webp";
+import prometheusFacing from "../assets/projects/prometheus/facing-a-billet-in-the-chuck.webp";
+import prometheusTailstock from "../assets/projects/prometheus/at-the-lathe-tailstock.webp";
 
 export interface Workstream {
   index: string;
@@ -142,7 +143,7 @@ export const projects: Project[] = [
     name: "Project Prometheus",
     cover: prometheusCover,
     coverAlt:
-      "The regeneratively cooled chamber standing upright on a workbench, cooling channels running the full length of its outer wall.",
+      "A machined tank closure resting on a workbench, the concentric tool marks left by the lathe still visible across its domed face.",
     tagline: "A regeneratively cooled clean-sheet redesign, aimed at hot fire.",
     years: "2026–present",
     status: "active",
@@ -183,14 +184,19 @@ export const projects: Project[] = [
     ],
     gallery: [
       {
-        src: prometheusCutting,
-        alt: "A regeneratively cooled chamber on a mill, mid-cut, with coolant channels visible along its wall.",
-        caption: "Cutting the regenerative cooling channels.",
+        src: prometheusFacing,
+        alt: "A flat metal billet gripped in a lathe chuck, its face freshly cut.",
+        caption: "Facing a billet in the chuck.",
       },
       {
-        src: prometheusChannels,
-        alt: "Close-up of the finished regenerative cooling channels machined into the chamber wall.",
-        caption: "The finished cooling channels, before jacketing.",
+        src: prometheusTailstock,
+        alt: "A team member at a manual lathe with one hand on the tailstock handwheel.",
+        caption: "Feeding the tailstock by hand.",
+      },
+      {
+        src: prometheusBoring,
+        alt: "A cylindrical workpiece held in a lathe chuck while a tool cuts into its end, swarf curling away from the cut.",
+        caption: "Cutting a bore on the lathe.",
       },
     ],
     detailHref: "/projects/prometheus",

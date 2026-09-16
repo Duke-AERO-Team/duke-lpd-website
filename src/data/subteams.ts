@@ -8,9 +8,6 @@ import type { Member } from "./team";
 import cardChamber from "../assets/card-chamber.webp";
 import cardFluids from "../assets/card-fluids.webp";
 import cardControls from "../assets/card-controls.webp";
-import plateChamber from "../assets/plate-chamber.webp";
-import plateFluids from "../assets/plate-fluids.webp";
-import plateControls from "../assets/plate-controls.webp";
 
 export interface Subteam {
   slug: string;
@@ -21,18 +18,31 @@ export interface Subteam {
   /** What the subteam actually owns, used at the top of its own page. */
   detail: string;
   /**
-   * Everyone on the subteam, first entry first: that one is the lead, and both
-   * the subteam page and /team read it from position 0 rather than from a
-   * separate field, so there is only ever one place a lead is named.
+   * Everyone on the subteam, first entry first: that one is the lead, read from
+   * position 0 rather than from a separate field so there is only ever one
+   * place a lead is named. Only /team draws these — the subteam pages describe
+   * the work and name nobody.
    */
   members: Member[];
   card: ImageMetadata;
   cardAlt: string;
-  plate: ImageMetadata;
-  plateAlt: string;
-  plateCaption: string;
-  /** Read off the team's own drawings — nothing here is estimated. */
-  specs: { label: string; value: string }[];
+  /**
+   * The drawing a subteam page opens on, when one earns the space. Optional
+   * because an image that size has to be worth the whole first screen: a
+   * cross-section or a P&ID repays the room, a photograph of one part does
+   * not — so controls opens on its heading and reaches its photography further
+   * down the page instead. Omitting it takes the alt text and caption with it.
+   */
+  plate?: ImageMetadata;
+  plateAlt?: string;
+  plateCaption?: string;
+  /**
+   * Three facts about the subteam, in its own plain words — scope and craft,
+   * not part numbers. Optional for the same reason `plate` is: a strip of
+   * labelled values is a third kind of thing on a page that reads better as
+   * prose and photographs alone, so a page is free to carry none.
+   */
+  specs?: { label: string; value: string }[];
 }
 
 export const subteams: Subteam[] = [
@@ -43,23 +53,13 @@ export const subteams: Subteam[] = [
     summary:
       "Injector, chamber, and igniter design — turning propellant flow into thrust.",
     detail:
-      "Combustion Devices owns everything between the injector face and the nozzle exit: how propellant is atomised and mixed, how the chamber survives what happens next, and how that gas is accelerated into thrust.",
+      "Combustion Devices designs, manufactures, and tests the injector, chamber, and nozzle that turn propellant into thrust. We bring together analysis and hands-on work to build hardware for the extreme conditions inside a liquid rocket engine.",
     members: [
       { name: "Archer White", study: "MechE/Aero '29", photo: "archer-white" },
     ],
     card: cardChamber,
     cardAlt:
       "Cross-section of the engine: converging-diverging nozzle and chamber liner.",
-    plate: plateChamber,
-    plateAlt:
-      "Engine cross-section showing the bolted outer jacket, chamber liner, throat, and nozzle.",
-    plateCaption:
-      "Engine cross-section: a bolted outer jacket carries the chamber liner, converging to the throat and expanding through the nozzle.",
-    specs: [
-      { label: "Owns", value: "Injector, chamber, igniter" },
-      { label: "Nozzle", value: "Converging–diverging" },
-      { label: "Assembly", value: "Bolted jacket and liner" },
-    ],
   },
   {
     slug: "fluids",
@@ -79,19 +79,6 @@ export const subteams: Subteam[] = [
     card: cardFluids,
     cardAlt:
       "Piping and instrumentation diagram showing propellant tanks, servo ball valves, and check valves.",
-    plate: plateFluids,
-    plateAlt:
-      "Full piping and instrumentation diagram of the propellant feed system, with tanks, valves, regulators, and a legend.",
-    plateCaption:
-      "Piping and instrumentation diagram for the 26/27 system — fuel, oxidiser, and nitrogen pressurant, routed through servo ball valves, check valves, and regulators.",
-    specs: [
-      { label: "Actuation", value: "Servo and 3-way ball valves" },
-      {
-        label: "Instrumentation",
-        value: "Pressure transducers, thermocouples",
-      },
-      { label: "Line sizes", value: '1/4", 1/2", 3/4"' },
-    ],
   },
   {
     slug: "controls",
@@ -100,22 +87,12 @@ export const subteams: Subteam[] = [
     summary:
       "The in-house control board and software that arm, sequence, and monitor every test.",
     detail:
-      "Electrical & Controls owns the board and the software that arm, sequence, and log a test. Every valve command and every reading passes through hardware the team laid out itself.",
+      "Electrical & Controls develops the electronics and software that operate our liquid propulsion test stand. We connect the hardware to the operators, from valve commands to live sensor data.",
     members: [
       { name: "Michael Danley", study: "ECE, CS '29", photo: "michael-danley" },
     ],
     card: cardControls,
     cardAlt:
       "Layout of the in-house liquid propulsion control board, showing the servo bus and pressure-transducer interface.",
-    plate: plateControls,
-    plateAlt:
-      "Full board layout of the Liquid Propulsion Control Board V1.0, showing the twelve-channel pressure-transducer interface and eight-channel servo bus.",
-    plateCaption:
-      "Liquid Propulsion Control Board V1.0 — a twelve-channel pressure-transducer interface, an eight-channel servo bus, and the trigger lines that sequence a firing.",
-    specs: [
-      { label: "Servo bus", value: "8 channels" },
-      { label: "PT interface", value: "12 channels" },
-      { label: "Acquisition", value: "3 × 8-channel ADC" },
-    ],
   },
 ];

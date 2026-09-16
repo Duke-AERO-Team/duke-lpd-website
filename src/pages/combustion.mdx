@@ -2,3 +2,112 @@
 layout: ../layouts/SubteamDetail.astro
 slug: combustion
 ---
+
+import SubteamFeature from "../components/SubteamFeature.astro";
+import Figure from "../components/Figure.astro";
+import engineSection from "../assets/plate-chamber.webp";
+import latheWork from "../assets/subteams/lab/turning-on-the-lathe.webp";
+import workpiece from "../assets/subteams/lab/workpiece-in-chuck.webp";
+import machinedGrooves from "../assets/subteams/lab/machined-grooves.webp";
+import engineOnStand from "../assets/wall/row-3/10-engine-mounted-on-the-test-stand.webp";
+import ispCurve from "../assets/subteams/combustion/isp-vs-mixture-ratio.webp";
+import nozzleWasher from "../assets/subteams/combustion/nozzle-washer-drawing.webp";
+
+<SubteamFeature>
+
+## From injector to nozzle
+
+We turn the rocket’s size and performance goals into the geometry of the engine.
+Calculations and simulations guide the sizing of the injector, combustion
+chamber, throat, and nozzle. Each decision has to account for the propellants,
+operating pressures, and intense heat the hardware will face.
+
+<div slot="media">
+  <Figure
+    src={engineSection}
+    sizes="(min-width: 1280px) 610px, (min-width: 960px) 52vw, 92vw"
+    alt="Engine cross-section showing the injector assembly, chamber, narrow throat, and expanding nozzle."
+    caption="A view inside the engine, from the injector assembly to the nozzle exit."
+  />
+
+  <div class="mt-6">
+    <Figure
+      src={ispCurve}
+      sizes="(min-width: 1280px) 610px, (min-width: 960px) 52vw, 92vw"
+      alt="Line plot of ambient specific impulse against mixture ratio, with a separate curve for each nozzle expansion ratio between 3.3 and 5.8."
+      caption="A sweep of specific impulse against mixture ratio, one curve per expansion ratio. Trades like this one are how a chamber pressure and a nozzle size stop being assumptions."
+    />
+  </div>
+</div>
+
+</SubteamFeature>
+
+<SubteamFeature reverse>
+
+## From design to hardware
+
+The work moves between CAD, modeling, and the machine shop. We manufacture
+engine components and bring the designs together as physical hardware ready for
+testing. Current development focuses on an ablative chamber to support rapid
+testing, with a lining that gradually wears away to protect the chamber from
+combustion heat.
+
+<div slot="media">
+<div class="mb-6">
+  <Figure
+    src={nozzleWasher}
+    sizes="(min-width: 1280px) 610px, (min-width: 960px) 52vw, 92vw"
+    alt="Dimensioned shop drawing of the ablative engine nozzle washer, with a plan view, two section views, and an isometric in a Duke AERO title block."
+    caption="A nozzle washer for the ablative engine, drawn for the shop."
+  />
+</div>
+
+<div class="feature-gallery feature-gallery-hardware">
+  <Figure
+    src={latheWork}
+    alt="A student operating a lathe while machining a metal part in the shop."
+    crop="4/5"
+    sizes="(min-width: 1280px) 330px, (min-width: 960px) 28vw, 92vw"
+  />
+  <Figure
+    src={workpiece}
+    alt="A cylindrical metal workpiece with machined grooves held in a lathe chuck."
+    crop="16/10"
+    sizes="(min-width: 1280px) 300px, (min-width: 960px) 26vw, 46vw"
+  />
+  <Figure
+    src={machinedGrooves}
+    alt="Close-up of grooves and tool marks on a machined metal component."
+    crop="16/10"
+    sizes="(min-width: 1280px) 300px, (min-width: 960px) 26vw, 46vw"
+  />
+</div>
+
+<div class="photo-note">
+  Machining in the shop, from the lathe to the finished surface details.
+</div>
+</div>
+
+</SubteamFeature>
+
+<SubteamFeature>
+
+## Bringing the test together
+
+Combustion Devices works with Fluid Systems and Electrical & Controls to match
+the engine with its propellant supply and test setup. Beyond the engine itself,
+we help develop the ignition system, test stand, and water deluge system that
+limits exhaust damage. Preparing for a hot fire means making those pieces work
+together.
+
+<div slot="media">
+  <Figure
+    src={engineOnStand}
+    alt="Machined engine hardware bolted to a vertical test-stand support in the shop."
+    crop="4/3"
+    sizes="(min-width: 1280px) 610px, (min-width: 960px) 52vw, 92vw"
+    caption="Engine hardware mounted on the test stand."
+  />
+</div>
+
+</SubteamFeature>

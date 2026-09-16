@@ -3,6 +3,13 @@ layout: ../../layouts/ProjectDetail.astro
 slug: prometheus
 ---
 
+import Figure from "../../components/Figure.astro";
+import ispCurve from "../../assets/subteams/combustion/isp-vs-mixture-ratio.webp";
+import closureRender from "../../assets/subteams/fluids/tank-closure-render.webp";
+import tankSection from "../../assets/subteams/fluids/propellant-tank-section.webp";
+import tankHead from "../../assets/subteams/fluids/tank-head-plumbing.webp";
+import valveActuator from "../../assets/subteams/fluids/valve-actuator-linkage.webp";
+
 ## The redesign
 
 Prometheus is Duke AERO Liquid Propulsion's clean-sheet successor to Eno: a
@@ -11,6 +18,12 @@ forward from the clamshell architecture. Regenerative cooling routes propellant
 through channels machined into the chamber wall before it reaches the injector —
 the chamber cools itself with propellant that was headed into combustion anyway,
 rather than relying on a single-use ablative liner.
+
+<Figure
+  src={ispCurve}
+  alt="Line plot of ambient specific impulse against mixture ratio, with a separate curve for each nozzle expansion ratio between 3.3 and 5.8."
+  caption="Ambient specific impulse against mixture ratio, swept across expansion ratios — the trade that turns a performance goal into a nozzle and an operating point."
+/>
 
 <div class="content-todo">
   TODO(content): confirm program start date, target propellants, and
@@ -30,15 +43,120 @@ carries forward into how Prometheus's fluid systems are sized.
   publish.
 </div>
 
+## Flight tanks and feed system
+
+The tanks are the part of Prometheus furthest along into hardware. Each is a
+cylinder closed by a machined dome: the ports land on its face, a pair of O-ring
+grooves seals it against the tank wall, and a ring of lugs around the rim
+carries the bolt load. The first closures are already turned — the one in this
+page's banner came off the lathe in the shop — with the feed side around them
+drawn but not yet built: the fittings that land on the tank head, and the
+linkage that lets an actuator drive a valve from beside the line rather than
+sitting on top of it.
+
+<Figure
+  src={closureRender}
+  alt="CAD render of a tank closure: a machined dome with threaded ports across its face, a ring of bolt lugs around the rim, and two O-ring grooves below them."
+  caption="The tank closure — ports on the face, lugs around the rim, O-ring grooves below."
+/>
+
+<div class="figure-pair">
+  <Figure
+    src={tankSection}
+    alt="Cutaway CAD section of a propellant tank, showing the closure and its ports at the top, the propellant volume, and the outlet cone at the base."
+    caption="The tank in section, closure to outlet."
+  />
+  <Figure
+    src={tankHead}
+    alt="CAD render of the top of a propellant tank, with fittings, a valve, and a pressurant hose landing on the closure."
+    caption="Fittings and the pressurant line on the tank head."
+  />
+</div>
+
+<Figure
+  src={valveActuator}
+  alt="CAD render of a valve actuator: stacked mounting plates and a linkage arm driving the stem of a threaded valve body."
+  caption="A feed-system valve and the linkage that drives it."
+/>
+
+<div class="content-todo">
+  TODO(content): tank volumes, operating and proof pressures, and material once
+  the design is frozen — and whether the electropump or a pressure-fed system
+  drives the flight configuration.
+</div>
+
+## Avionics and ground control
+
+Every earlier cold flow ran through a wired setup: a mess of cables, a handful
+of protoboards, an Arduino UNO, and an external DAQ, all driven from a laptop
+running LabVIEW over a long USB run. It worked, but it cost hours of wiring and
+troubleshooting before each test, and a liquid engine doesn't forgive a flaky
+connection the way a bench experiment does. The boards that sequence Prometheus
+are the division's answer to that pile of wires.
+
+### Control board V1.0
+
+V1.0 folds sensing, actuation, and power into a single board built around an
+ESP32-C3, talking to a laptop over WiFi instead of a USB tether — the same link
+carries telemetry out and servo commands in, so the DAQ and its cabling come out
+of the test setup entirely.
+
+Sensing runs through three 8-channel TLA2518 ADCs sampled over SPI, with enough
+of their combined 24 channels broken out to give the board its twelve-channel
+pressure-transducer interface, each channel hardware-averaged to cut noise
+before it ever reaches software. Actuation runs through a PCA9685 PWM driver,
+offloading servo timing from the MCU entirely and giving the board's
+eight-channel servo bus 12-bit resolution on every valve. Separate buck
+converters keep servo power and logic power on their own rails off the same 12 V
+input, and every field connection — PTs, servos, power — lands on a keyed JST
+connector, so a cable can't go in backwards during a rushed pre-test hookup.
+
+### Ground control
+
+The board pairs with a Python ground-station application that gives the operator
+a command console, live per-channel servo state, and a real-time plot of all
+twelve pressure channels running through a configurable moving average. Valve
+actuation can be driven live from the console or from a timed sequence script,
+so an abort or a firing sequence runs the same way every time instead of
+depending on an operator's timing. Every run — telemetry and actuator state
+alike — logs to CSV for teardown after the test.
+
+### What cold flow found
+
+Running V1.0 through cold flow cut electrical setup from hours to minutes and
+more than doubled pressure-transducer polling, from 40 Hz to 100 Hz, once
+sampling moved onto dedicated hardware instead of a DAQ. Testing also found the
+board's limits: servo current capacity was undersized for sustained actuation,
+and analog routing on a single board left the pressure readings more susceptible
+to noise than the team wanted. Both are the reason there's a V2.0.
+
+### Board V2.0
+
+V2.0 splits the single board in two — a control board carrying the MCU and servo
+bus, and a separate sampling board carrying pressure, thermocouple, and
+load-cell inputs — so switching noise from servo drive never shares a board with
+the analog signals it would otherwise corrupt. The MCU moves to an ESP32-S3 with
+onboard LoRa and local data logging, adding a wireless fallback and an on-board
+record independent of the ground-station link. Sampling gains thermocouple
+channels through an AD8495 amplifier and load-cell channels through an HX711
+ADC, and servo power moves to a higher-current buck converter sized for the draw
+V1.0 undersized. The two-board stack is built and is now being brought up ahead
+of its first cold flow.
+
+<div class="content-todo">
+  TODO(content): confirm current V2.0 status (bring-up vs. first test) before
+  this goes live, and update the paragraph above to match.
+</div>
+
 ## Where Prometheus stands today
 
-The photos below are from machining the regenerative cooling channels into the
-chamber wall — the feature that most distinguishes this engine from Eno. The
-project is active, aimed at getting from drawing to a hot-fire test vehicle in
-as little time as possible.
+The photographs below are from the shop this term, as the first Prometheus parts
+come off the lathe. The project is active, aimed at getting from drawing to a
+hot-fire test vehicle in as little time as possible.
 
 <div class="content-todo">
   TODO(content): current build/test status and the next milestone on the path to
   hot fire — keep this section current as the campaign progresses rather than
-  letting it go stale after publishing.
+  letting it go stale after publishing. Name the parts in the build photographs
+  below, too; their captions describe the cut, not the component.
 </div>

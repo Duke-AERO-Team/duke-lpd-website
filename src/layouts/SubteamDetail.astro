@@ -9,8 +9,12 @@ import { subteams } from "../data/subteams";
 
 // MDX layout frontmatter, not page props — same contract as ProjectDetail:
 // the page carries only `slug`, and everything drawn below (name, detail,
-// plate, specs, lead) is looked up from `data/subteams.ts` so a subteam page
-// never forks a second copy of facts the About cards already own.
+// plate, specs) is looked up from `data/subteams.ts` so a subteam page never
+// forks a second copy of facts the About cards already own.
+//
+// Deliberately no roster here: a subteam page describes the work, and naming
+// people is `/team`'s job. `subteams.ts` still carries `members`, because that
+// is where /team reads the rows and their lead from.
 interface Props {
   frontmatter: { slug: string };
 }
@@ -25,10 +29,6 @@ if (!team) {
     `SubteamDetail: no subteam in data/subteams.ts with slug "${slug}"`,
   );
 }
-
-// Position 0 is the lead by convention (see data/subteams.ts) — read here
-// rather than from a `lead` field so the name exists in exactly one place.
-const lead = team.members[0];
 
 // Rendered up front so an empty MDX body leaves no trace: a subteam with no
 // write-up yet has to produce exactly the page it produced when these were one
@@ -81,37 +81,38 @@ const prose = Astro.slots.has("default")
         </p>
       </div>
 
-      <!-- The drawing is the subject here rather than a texture, so it gets a
+      <!-- The plate is the subject here rather than a texture, so it gets a
            lighter grade, no crop, and a caption instead of a scrim. Capped to
            a viewport-relative height rather than left at w-full h-auto: a
-           near-square plate (fluids, controls) at full column width would
-           otherwise render taller than the viewport on first scroll. -->
-      <figure class="mt-14 md:mt-20">
-        <div
-          class="flex justify-center border border-white/10 bg-white/[0.02] p-3 md:p-6"
-        >
-          <Image
-            src={team.plate}
-            alt={team.plateAlt}
-            widths={[700, 1100, team.plate.width]}
-            sizes="(min-width: 768px) 80vw, 100vw"
-            class="h-auto max-h-[64vh] w-auto max-w-full"
-            loading="eager"
-          />
-        </div>
-        <figcaption
-          class="mt-4 max-w-3xl text-sm leading-relaxed text-white/60"
-        >
-          {team.plateCaption}
-        </figcaption>
-      </figure>
+           near-square plate at full column width would otherwise render taller
+           than the viewport on first scroll. Optional — see `plate` in
+           data/subteams.ts for when a page is better off without one. -->
+      {
+        team.plate && (
+          <figure class="mt-14 md:mt-20">
+            <div class="flex justify-center border border-white/10 bg-white/[0.02] p-3 md:p-6">
+              <Image
+                src={team.plate}
+                alt={team.plateAlt ?? ""}
+                widths={[700, 1100, team.plate.width]}
+                sizes="(min-width: 768px) 80vw, 100vw"
+                class="h-auto max-h-[64vh] w-auto max-w-full"
+                loading="eager"
+              />
+            </div>
+            {team.plateCaption && (
+              <figcaption class="mt-4 max-w-3xl text-sm leading-relaxed text-white/60">
+                {team.plateCaption}
+              </figcaption>
+            )}
+          </figure>
+        )
+      }
 
-      <div
-        class="mt-14 grid gap-10 border-t border-white/10 pt-10 md:mt-20 md:grid-cols-3"
-      >
-        <dl class="md:col-span-2 grid gap-x-8 gap-y-6 sm:grid-cols-3">
-          {
-            team.specs.map((spec) => (
+      {
+        team.specs?.length && (
+          <dl class="mx-auto mt-14 grid max-w-5xl gap-x-10 gap-y-6 border-t border-white/10 pt-10 sm:grid-cols-3 md:mt-20">
+            {team.specs.map((spec) => (
               <div>
                 <dt class="font-mono text-xs uppercase tracking-[0.18em] text-white/45">
                   {spec.label}
@@ -120,31 +121,20 @@ const prose = Astro.slots.has("default")
                   {spec.value}
                 </dd>
               </div>
-            ))
-          }
-        </dl>
-
-        {
-          lead && (
-            <div>
-              <p class="font-mono text-xs uppercase tracking-[0.18em] text-white/45">
-                Subteam lead
-              </p>
-              <p class="mt-2 font-display text-base font-bold text-white">
-                {lead.name}
-              </p>
-              <p class="mt-1 font-mono text-xs text-white/60">{lead.study}</p>
-            </div>
-          )
-        }
-      </div>
+            ))}
+          </dl>
+        )
+      }
 
       {
+        /* Two widths on purpose. The container is max-w-7xl for the plate's
+           sake, and a line of body copy dragged that wide is unreadable — so
+           the wrapper stops at the width the photo grids want, and
+           `page-prose-wide` measures the text inside it. */
         prose && (
-          <div
-            class="page-prose mt-14 border-t border-white/10 pt-10 md:mt-20"
-            set:html={prose}
-          />
+          <div class="mt-14 border-t border-white/10 pt-10 md:mt-20">
+            <div class="page-prose page-prose-wide" set:html={prose} />
+          </div>
         )
       }
 
