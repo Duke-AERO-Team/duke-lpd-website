@@ -3,111 +3,71 @@ layout: ../layouts/SubteamDetail.astro
 slug: combustion
 ---
 
-import SubteamFeature from "../components/SubteamFeature.astro";
-import Figure from "../components/Figure.astro";
+import SubteamShot from "../components/SubteamShot.astro";
 import engineSection from "../assets/plate-chamber.webp";
+import ispCurve from "../assets/subteams/combustion/isp-vs-mixture-ratio.webp";
+import nozzleWasher from "../assets/subteams/combustion/nozzle-washer-drawing.webp";
 import latheWork from "../assets/subteams/lab/turning-on-the-lathe.webp";
 import workpiece from "../assets/subteams/lab/workpiece-in-chuck.webp";
 import machinedGrooves from "../assets/subteams/lab/machined-grooves.webp";
 import engineOnStand from "../assets/wall/row-3/10-engine-mounted-on-the-test-stand.webp";
-import ispCurve from "../assets/subteams/combustion/isp-vs-mixture-ratio.webp";
-import nozzleWasher from "../assets/subteams/combustion/nozzle-washer-drawing.webp";
 
-<SubteamFeature>
+<div class="shot-grid">
 
-## From injector to nozzle
+<SubteamShot
+  wide
+  index="01"
+  src={engineSection}
+  alt="Engine cross-section showing the injector assembly, chamber, narrow throat, and expanding nozzle."
+  caption="Combustion Devices owns the engine itself: the injector that meters and mixes propellant, the chamber where it burns, and the throat and nozzle that turn that pressure into thrust. Sizing any of them means working backwards from the rocket's performance goals through the propellants, the operating pressure, and the heat the hardware has to survive."
+/>
 
-We turn the rocket’s size and performance goals into the geometry of the engine.
-Calculations and simulations guide the sizing of the injector, combustion
-chamber, throat, and nozzle. Each decision has to account for the propellants,
-operating pressures, and intense heat the hardware will face.
+<SubteamShot
+  index="02"
+  src={ispCurve}
+  crop="4/3"
+  alt="Line plot of ambient specific impulse against mixture ratio, with a separate curve for each nozzle expansion ratio between 3.3 and 5.8."
+  caption="That sizing starts as a trade study. Ambient specific impulse swept against mixture ratio, one curve per nozzle expansion ratio, is how a performance target turns into a chamber pressure and a nozzle worth machining."
+/>
 
-<div slot="media">
-  <Figure
-    src={engineSection}
-    sizes="(min-width: 1280px) 610px, (min-width: 960px) 52vw, 92vw"
-    alt="Engine cross-section showing the injector assembly, chamber, narrow throat, and expanding nozzle."
-    caption="A view inside the engine, from the injector assembly to the nozzle exit."
-  />
+<SubteamShot
+  index="03"
+  src={nozzleWasher}
+  crop="4/3"
+  alt="Dimensioned shop drawing of the ablative engine nozzle washer, with a plan view, two section views, and an isometric in a Duke AERO title block."
+  caption="Analysis ends in a dimensioned drawing. Current development centres on an ablative chamber built for rapid testing — a liner that gradually wears away, carrying combustion heat off the chamber wall with it."
+/>
 
-  <div class="mt-6">
-    <Figure
-      src={ispCurve}
-      sizes="(min-width: 1280px) 610px, (min-width: 960px) 52vw, 92vw"
-      alt="Line plot of ambient specific impulse against mixture ratio, with a separate curve for each nozzle expansion ratio between 3.3 and 5.8."
-      caption="A sweep of specific impulse against mixture ratio, one curve per expansion ratio. Trades like this one are how a chamber pressure and a nozzle size stop being assumptions."
-    />
-  </div>
+<SubteamShot
+  index="04"
+  src={latheWork}
+  crop="4/5"
+  alt="A student operating a lathe while machining a metal part in the shop."
+  caption="We manufacture our own hardware. Chamber and nozzle components are turned and milled in the shared shop rather than ordered in, which keeps the distance from a CAD change to a part in hand short enough to iterate on."
+/>
+
+<SubteamShot
+  index="05"
+  src={workpiece}
+  crop="4/5"
+  alt="A cylindrical metal workpiece with machined grooves held in a lathe chuck."
+  caption="A component held in the lathe chuck, faced and grooved. Bore, wall thickness, and surface finish are settled here rather than in CAD, and they decide whether a part seats square and whether a joint holds pressure."
+/>
+
+<SubteamShot
+  index="06"
+  src={machinedGrooves}
+  crop="4/3"
+  alt="Close-up of concentric machined steps and tool marks on a metal component."
+  caption="Concentric steps cut into a finished face, tool marks still on the metal. Detail at this scale is what a drawing has to specify and what the shop has to hit for the assembly above it to go together at all."
+/>
+
+<SubteamShot
+  index="07"
+  src={engineOnStand}
+  crop="4/3"
+  alt="Machined engine hardware bolted to a vertical test-stand support in the shop."
+  caption="Engine hardware bolted to the test stand. Beyond the engine we build the igniter, the stand, and the water deluge that limits exhaust damage — and we work with Fluid Systems and Electrical & Controls to match the engine to its propellant supply and its firing sequence."
+/>
+
 </div>
-
-</SubteamFeature>
-
-<SubteamFeature reverse>
-
-## From design to hardware
-
-The work moves between CAD, modeling, and the machine shop. We manufacture
-engine components and bring the designs together as physical hardware ready for
-testing. Current development focuses on an ablative chamber to support rapid
-testing, with a lining that gradually wears away to protect the chamber from
-combustion heat.
-
-<div slot="media">
-<div class="mb-6">
-  <Figure
-    src={nozzleWasher}
-    sizes="(min-width: 1280px) 610px, (min-width: 960px) 52vw, 92vw"
-    alt="Dimensioned shop drawing of the ablative engine nozzle washer, with a plan view, two section views, and an isometric in a Duke AERO title block."
-    caption="A nozzle washer for the ablative engine, drawn for the shop."
-  />
-</div>
-
-<div class="feature-gallery feature-gallery-hardware">
-  <Figure
-    src={latheWork}
-    alt="A student operating a lathe while machining a metal part in the shop."
-    crop="4/5"
-    sizes="(min-width: 1280px) 330px, (min-width: 960px) 28vw, 92vw"
-  />
-  <Figure
-    src={workpiece}
-    alt="A cylindrical metal workpiece with machined grooves held in a lathe chuck."
-    crop="16/10"
-    sizes="(min-width: 1280px) 300px, (min-width: 960px) 26vw, 46vw"
-  />
-  <Figure
-    src={machinedGrooves}
-    alt="Close-up of grooves and tool marks on a machined metal component."
-    crop="16/10"
-    sizes="(min-width: 1280px) 300px, (min-width: 960px) 26vw, 46vw"
-  />
-</div>
-
-<div class="photo-note">
-  Machining in the shop, from the lathe to the finished surface details.
-</div>
-</div>
-
-</SubteamFeature>
-
-<SubteamFeature>
-
-## Bringing the test together
-
-Combustion Devices works with Fluid Systems and Electrical & Controls to match
-the engine with its propellant supply and test setup. Beyond the engine itself,
-we help develop the ignition system, test stand, and water deluge system that
-limits exhaust damage. Preparing for a hot fire means making those pieces work
-together.
-
-<div slot="media">
-  <Figure
-    src={engineOnStand}
-    alt="Machined engine hardware bolted to a vertical test-stand support in the shop."
-    crop="4/3"
-    sizes="(min-width: 1280px) 610px, (min-width: 960px) 52vw, 92vw"
-    caption="Engine hardware mounted on the test stand."
-  />
-</div>
-
-</SubteamFeature>

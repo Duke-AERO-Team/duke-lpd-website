@@ -1,0 +1,82 @@
+---
+// One photograph on a photo-led subteam page. The caption is the page's copy
+// rather than an annotation on it, so it gets body treatment and a measure of
+// its own instead of the small muted figcaption `Figure` uses — on these pages
+// there is no paragraph above for it to defer to.
+//
+// Sits inside `.shot-grid` (global.css), which decides how wide each one runs.
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+interface Props {
+  src: ImageMetadata;
+  alt: string;
+  /** Mono counter, matching the `01`/`02` idiom the subteam and workstream lists already use. */
+  index: string;
+  caption: string;
+  /**
+   * Shared aspect for the two shots sharing a row. Set it on both: a row of
+   * native aspects lands its two captions on different lines, which reads as a
+   * mistake rather than as a pair.
+   */
+  crop?: string;
+  /** Span the full grid — for an image carrying a whole idea by itself. */
+  wide?: boolean;
+  sizes?: string;
+}
+
+const { src, alt, index, caption, crop, wide = false, sizes } = Astro.props;
+
+const resolvedSizes =
+  sizes ??
+  (wide
+    ? "(min-width: 1280px) 1216px, 92vw"
+    : "(min-width: 1280px) 600px, (min-width: 900px) 46vw, 92vw");
+---
+
+<figure class:list={["shot", { "shot-wide": wide }]}>
+  <Image
+    src={src}
+    alt={alt}
+    widths={wide ? [700, 1100, 1600] : [480, 800, 1200]}
+    sizes={resolvedSizes}
+    class:list={["shot-img", crop ? "w-full object-cover" : "h-auto w-full"]}
+    style={crop ? `aspect-ratio: ${crop}` : undefined}
+  />
+  <figcaption class="shot-cap">
+    <span class="shot-index">{index}</span>
+    <span class="shot-text">{caption}</span>
+  </figcaption>
+</figure>
+
+<style>
+  .shot-img {
+    display: block;
+    border: 1px solid rgb(255 255 255 / 0.1);
+  }
+
+  /* Index and text as two columns rather than a run-in, so a caption running to
+     three lines stays aligned on one left edge instead of wrapping under its
+     own number. */
+  .shot-cap {
+    margin-top: 1.1rem;
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr);
+    gap: 0 0.75rem;
+  }
+
+  .shot-index {
+    padding-top: 0.2rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-accent-peach);
+  }
+
+  .shot-text {
+    max-width: 38rem;
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    color: rgb(255 255 255 / 0.75);
+    text-wrap: pretty;
+  }
+</style>
