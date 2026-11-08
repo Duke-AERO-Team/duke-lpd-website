@@ -12,6 +12,9 @@ import testPlatform from "../assets/subteams/controls/test-platform.webp";
 import boardV1 from "../assets/subteams/controls/control-board-v1.webp";
 import boardV2 from "../assets/subteams/controls/control-board-v2.webp";
 import groundStation from "../assets/subteams/controls/ground-station-interface.webp";
+import titanStack from "../assets/subteams/controls/titan-board-stack.webp";
+import titanBack from "../assets/subteams/controls/titan-boards-from-behind.webp";
+import titanAngled from "../assets/subteams/controls/titan-board-angled.webp";
 
 <SubteamFeature>
 
@@ -73,6 +76,46 @@ together.
 </SubteamFeature>
 
 <SubteamFeature>
+
+## Flight avionics
+
+The test stand is no longer the only thing we build for. For Prometheus, we're
+designing TITAN, a flight computer that rides inside the vehicle with its own
+peripheral boards for sensing and actuation. Its firmware runs on Zephyr RTOS,
+shares a common foundation with the ground management system, and gives one
+board sole authority over vehicle state and every output.
+
+<div slot="media">
+<div class="feature-gallery">
+  <Figure
+    src={titanStack}
+    alt="Render of three circuit boards floating against a purple gradient: the TITAN flight computer in the middle, flanked by two peripheral boards."
+    crop="16/10"
+    sizes="(min-width: 1280px) 610px, (min-width: 960px) 52vw, 92vw"
+  />
+  <Figure
+    src={titanBack}
+    alt="Render of three circuit boards from behind, their silkscreens labelled Sampling Board v1.0, TITAN Flight Computer v1.0, and Actuator Board v1.0, each with its own white line artwork."
+    crop="16/10"
+    sizes="(min-width: 1280px) 300px, (min-width: 960px) 26vw, 46vw"
+  />
+  <Figure
+    src={titanAngled}
+    alt="Angled render of the TITAN board, showing its radio module, Prometheus silkscreen, and the three peripheral connectors along one edge."
+    crop="16/10"
+    sizes="(min-width: 1280px) 300px, (min-width: 960px) 26vw, 46vw"
+  />
+</div>
+
+<div class="photo-note">
+  TITAN with its sampling and actuator boards, the three from behind, and the
+  flight computer up close.
+</div>
+</div>
+
+</SubteamFeature>
+
+<SubteamFeature reverse>
 
 ## Working across the subteams
 

@@ -11,6 +11,7 @@ import latheWork from "../assets/subteams/lab/turning-on-the-lathe.webp";
 import workpiece from "../assets/subteams/lab/workpiece-in-chuck.webp";
 import machinedGrooves from "../assets/subteams/lab/machined-grooves.webp";
 import engineOnStand from "../assets/wall/row-3/10-engine-mounted-on-the-test-stand.webp";
+import injectorSection from "../assets/subteams/combustion/injector-head-section.webp";
 
 <div class="shot-grid">
 
@@ -39,7 +40,15 @@ import engineOnStand from "../assets/wall/row-3/10-engine-mounted-on-the-test-st
 />
 
 <SubteamShot
+  wide
   index="04"
+  src={injectorSection}
+  alt="CAD cross-section through the pintle injector manifold: propellant fittings threaded into the top plate, the copper pintle tip on the centerline, and the faceplate and chamber wall beneath."
+  caption="The injector is where that analysis becomes geometry. Prometheus uses a pintle: IPA comes down the copper tip on the centerline and sprays out through radial slots, into a sheet of nitrous coming down the annulus around it. Every passage drawn here has to be machinable as well as right."
+/>
+
+<SubteamShot
+  index="05"
   src={latheWork}
   crop="4/5"
   alt="A student operating a lathe while machining a metal part in the shop."
@@ -47,7 +56,7 @@ import engineOnStand from "../assets/wall/row-3/10-engine-mounted-on-the-test-st
 />
 
 <SubteamShot
-  index="05"
+  index="06"
   src={workpiece}
   crop="4/5"
   alt="A cylindrical metal workpiece with machined grooves held in a lathe chuck."
@@ -55,7 +64,7 @@ import engineOnStand from "../assets/wall/row-3/10-engine-mounted-on-the-test-st
 />
 
 <SubteamShot
-  index="06"
+  index="07"
   src={machinedGrooves}
   crop="4/3"
   alt="Close-up of concentric machined steps and tool marks on a metal component."
@@ -63,7 +72,7 @@ import engineOnStand from "../assets/wall/row-3/10-engine-mounted-on-the-test-st
 />
 
 <SubteamShot
-  index="07"
+  index="08"
   src={engineOnStand}
   crop="4/3"
   alt="Machined engine hardware bolted to a vertical test-stand support in the shop."

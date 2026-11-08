@@ -21,6 +21,7 @@ import prometheusCover from "../assets/projects/prometheus/machined-tank-closure
 import prometheusBoring from "../assets/projects/prometheus/cutting-a-bore-on-the-lathe.webp";
 import prometheusFacing from "../assets/projects/prometheus/facing-a-billet-in-the-chuck.webp";
 import prometheusTailstock from "../assets/projects/prometheus/at-the-lathe-tailstock.webp";
+import prometheusIndicating from "../assets/projects/prometheus/indicating-a-part-in-the-mill-vise.webp";
 
 export interface Workstream {
   index: string;
@@ -144,18 +145,19 @@ export const projects: Project[] = [
     cover: prometheusCover,
     coverAlt:
       "A machined tank closure resting on a workbench, the concentric tool marks left by the lathe still visible across its domed face.",
-    tagline: "A regeneratively cooled clean-sheet redesign, aimed at hot fire.",
+    tagline:
+      "An electric pump-fed nitrous/IPA engine, aimed at a 2028 test launch.",
     years: "2026–present",
     status: "active",
     statusLabel: "Active",
     objective:
-      "A clean-sheet redesign built on what Eno measured, aimed at getting from drawing to hot-fire test vehicle in as little time as possible.",
+      "A clean-sheet redesign built on what Eno measured: an electric pump-fed engine on nitrous oxide and isopropyl alcohol, developed in short design-build-test cycles toward a test launch in spring 2028 and the FAR-OUT challenge.",
     workstreams: [
       {
         index: "01",
         name: "Engine Core",
         summary:
-          "The regeneratively cooled chamber and injector that mix and burn propellant to produce thrust.",
+          "The pintle injector, an ablative chamber for testing, and the regeneratively cooled chamber meant to fly.",
       },
       {
         index: "02",
@@ -197,6 +199,11 @@ export const projects: Project[] = [
         src: prometheusBoring,
         alt: "A cylindrical workpiece held in a lathe chuck while a tool cuts into its end, swarf curling away from the cut.",
         caption: "Cutting a bore on the lathe.",
+      },
+      {
+        src: prometheusIndicating,
+        alt: "A dial indicator touching the stepped edge of a round part held in a mill vise.",
+        caption: "Indicating a part in the mill vise.",
       },
     ],
     detailHref: "/projects/prometheus",

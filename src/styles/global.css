@@ -193,9 +193,29 @@
 }
 
 /* Figures take their spacing from the prose rhythm around them rather than
-   carrying the outer margin the old end-of-page gallery figure needed. */
+   carrying the outer margin the old end-of-page gallery figure needed. Only
+   the UA's side and bottom margins are reset: a blanket `margin: 0` here
+   outranks `.page-prose > * + *` and would butt every figure against the
+   paragraph above it. */
 .page-prose .block-figure {
-  margin: 0;
+  margin-inline: 0;
+  margin-bottom: 0;
+}
+
+/* A diagram too dense to read at column width links to its full-size file.
+   Block, so the prose rhythm's top margin applies — an inline anchor would
+   swallow it. */
+.page-prose .figure-link {
+  display: block;
+  cursor: zoom-in;
+}
+
+.page-prose .figure-link .block-figure {
+  transition: border-color 150ms ease-out;
+}
+
+.page-prose .figure-link:hover .block-figure {
+  border-color: rgb(255 255 255 / 0.3);
 }
 
 /* Two boards side by side reads as one comparison rather than two unrelated

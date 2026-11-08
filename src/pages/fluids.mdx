@@ -15,6 +15,8 @@ import closureRender from "../assets/subteams/fluids/tank-closure-render.webp";
 import machinedClosure from "../assets/subteams/fluids/machined-tank-closure.webp";
 import tankHead from "../assets/subteams/fluids/tank-head-plumbing.webp";
 import valveActuator from "../assets/subteams/fluids/valve-actuator-linkage.webp";
+import closureStress from "../assets/subteams/fluids/tank-closure-stress-plot.webp";
+import pistonFos from "../assets/subteams/fluids/ipa-piston-factor-of-safety.webp";
 
 <SubteamFeature>
 
@@ -80,6 +82,24 @@ the lathe, turned from solid stock in the same shop as the engine parts.
 <div class="photo-note">
   A tank closure in CAD, a closure turned on the lathe, and the fittings that
   land on the tank head.
+</div>
+
+<div class="mt-6 figure-pair">
+  <Figure
+    src={closureStress}
+    sizes="(min-width: 1280px) 300px, (min-width: 960px) 26vw, 46vw"
+    alt="Finite-element stress plot of a tank closure, its face and ring of lugs colored mostly blue for low stress."
+  />
+  <Figure
+    src={pistonFos}
+    sizes="(min-width: 1280px) 300px, (min-width: 960px) 26vw, 46vw"
+    alt="Finite-element factor-of-safety plot of the domed IPA piston, with a minimum factor of safety of 1.7 noted in the plot header."
+  />
+</div>
+
+<div class="photo-note">
+  Before anything is cut, it's checked in simulation: a closure under static
+  load, and the IPA piston's factor of safety, minimum 1.7.
 </div>
 </div>
 

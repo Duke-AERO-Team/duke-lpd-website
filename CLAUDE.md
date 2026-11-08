@@ -184,8 +184,10 @@ fallback only guards a future project added without a detail page yet.
 - Decide whether to keep the shared Duke AERO favicon/logo or use a dedicated
   LPD mark.
 - **Content still outstanding from the team** (marked `TODO(content)` in
-  `src/pages/projects/eno.mdx` and `prometheus.mdx`): the narrative write-up
-  specifics each file's TODOs call out — propellants and target thrust/chamber
-  pressure, the specific cold-flow failure modes, confirmed program dates, the
-  design decisions Eno's data drove, and Prometheus's current build/test status.
-  Nothing here should guess at these.
+  `src/pages/projects/eno.mdx` and `prometheus.mdx`): Eno's specific cold-flow
+  failure modes and confirmed dates, which Prometheus changes trace to specific
+  Eno results, control board V2.0's current status, and the date of Prometheus's
+  first cold flow/hot fire. Nothing here should guess at these. Prometheus's
+  engineering numbers come from the team's Critical Design Review document and
+  the "LPD Active Projects → Project Prometheus" pages on the Duke AERO Outline
+  (docs.dukerocketry.com) — check there before adding a TODO.

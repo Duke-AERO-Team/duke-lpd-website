@@ -9,55 +9,161 @@ import closureRender from "../../assets/subteams/fluids/tank-closure-render.webp
 import tankSection from "../../assets/subteams/fluids/propellant-tank-section.webp";
 import tankHead from "../../assets/subteams/fluids/tank-head-plumbing.webp";
 import valveActuator from "../../assets/subteams/fluids/valve-actuator-linkage.webp";
+import closureStress from "../../assets/subteams/fluids/tank-closure-stress-plot.webp";
+import pistonFos from "../../assets/subteams/fluids/ipa-piston-factor-of-safety.webp";
+import injectorSection from "../../assets/subteams/combustion/injector-head-section.webp";
+import pintleTip from "../../assets/subteams/combustion/pintle-tip.webp";
+import pintleSlots from "../../assets/subteams/combustion/pintle-tip-injection-slots.webp";
+import ablativeChamber from "../../assets/subteams/combustion/ablative-chamber-section.webp";
+import titanBoard from "../../assets/subteams/controls/titan-flight-computer.webp";
+import titanStack from "../../assets/subteams/controls/titan-board-stack.webp";
+import firmwareArch from "../../assets/subteams/controls/firmware-architecture.webp";
+import vmsLayout from "../../assets/projects/prometheus/vms-physical-layout.webp";
+import thrustCurve from "../../assets/projects/prometheus/predicted-thrust-curve.webp";
+import electropump from "../../assets/projects/prometheus/electropump-assembly.webp";
+import impeller from "../../assets/projects/prometheus/pump-impeller-and-volute.webp";
+import fillStation from "../../assets/projects/prometheus/fill-cart-cad.webp";
+import testStand from "../../assets/projects/prometheus/test-stand-cad.webp";
+import fillSequence from "../../assets/projects/prometheus/fill-sequence.webp";
 
 ## The redesign
 
-Prometheus is Duke AERO Liquid Propulsion's clean-sheet successor to Eno: a
-regeneratively cooled engine, designed from the ground up rather than patched
-forward from the clamshell architecture. Regenerative cooling routes propellant
-through channels machined into the chamber wall before it reaches the injector —
-the chamber cools itself with propellant that was headed into combustion anyway,
-rather than relying on a single-use ablative liner.
+Prometheus is Duke AERO Liquid Propulsion's second bipropellant liquid engine,
+and a two-year project built around short design-build-test cycles rather than
+one long development arc. Every component is designed against flight
+requirements rather than stand requirements. The goal is a vehicle stack for the
+FAR-OUT 2028 challenge: a test launch in spring 2028 to a target apogee of
+14,000 ft, the ceiling at the Bayboro launch site.
+
+The engine burns nitrous oxide and isopropyl alcohol. The nitrous is
+self-pressurizing, fed from its own vapor pressure. The IPA is fed by an
+electric pump the team is designing in-house, with a nitrous vapor bleed line
+holding the IPA tank at the pressure the pump needs at its inlet. At take-off
+the engine makes 3,650 N of thrust and burns for about five and a half seconds.
+Thrust tapers toward 3,000 N by burnout as the nitrous pressure decays.
 
 <Figure
-  src={ispCurve}
-  alt="Line plot of ambient specific impulse against mixture ratio, with a separate curve for each nozzle expansion ratio between 3.3 and 5.8."
-  caption="Ambient specific impulse against mixture ratio, swept across expansion ratios — the trade that turns a performance goal into a nozzle and an operating point."
+  src={thrustCurve}
+  alt="Plot of predicted thrust against time: a step up to about 3,650 newtons at ignition, a straight decline to about 3,000 newtons over roughly five and a half seconds, then a drop to zero at burnout."
+  caption="The predicted thrust curve, regressive as the nitrous pressure decays. Hot fire will confirm it."
 />
 
-<div class="content-todo">
-  TODO(content): confirm program start date, target propellants, and
-  thrust/chamber pressure once finalized — nothing here should guess a number.
-</div>
+The flight vehicle is 6.125 in. in diameter, about 11 ft long, and around 105 lb
+fully fueled. It has a carbon-fiber airframe and fins, and a fiberglass nose
+cone so the radios can see out.
+
+<a
+  class="figure-link"
+  href="/images/flight-stack-layout.webp"
+  aria-label="Open the full-size flight stack layout"
+>
+  <Figure
+    src={vmsLayout}
+    alt="Side-view diagram of the Prometheus flight stack, forward to aft: nose cone, NOX tank at 900 psi, an inter-tank bay holding a 4S battery, the TITAN flight computer, and the rocket actuator board, then the IPA tank at 325 psi, a bay below it with a 6S battery, the rocket sensor board, and the electropump VESC, and finally the electropump and engine."
+    caption="The flight stack in side view, plumbing omitted: nitrous at 900 psi forward, IPA at 325 psi behind it, and the electronics in the bays between and below the tanks. Select it to view full size."
+  />
+</a>
 
 ## What changed from Eno
 
-Eno's cold flow campaign is the direct reason Prometheus looks the way it does.
-Regenerative cooling and a clean-sheet chamber replace the clamshell's
-bolted-halves structure, and the feed-system behavior Eno's campaign measured
-carries forward into how Prometheus's fluid systems are sized.
+Eno ran kerosene and nitrous, pressure-fed, through a bolted clamshell chamber.
+Prometheus changes the fuel, puts a pump on the fuel side, and steps chamber
+pressure up from Eno's 350 psi to 400 psi. Eno hardware still carries forward.
+The mass budget starts from Eno's preliminary flight stack, the thrust plate on
+the new stand is repurposed Eno hardware, and the valve servos are sized from
+the actuation torque Eno's valves needed.
 
 <div class="content-todo">
-  TODO(content): spell out the specific design decisions Eno's data drove —
-  which parameters changed, and by how much — once the design record is ready to
-  publish.
+  TODO(content): name which of these changes trace back to specific Eno cold
+  flow results, if the team wants that link drawn explicitly.
+</div>
+
+## The engine
+
+Mixture ratio is set at 2.6, well below the roughly 5 that gives peak specific
+impulse at 400 psi. That keeps flame temperature down and leaves enough IPA
+flowing to cool a regenerative chamber. Total propellant flow is 1.73 kg/s, and
+the nozzle is sized to expand to the pressure at 1,000 ft.
+
+<Figure
+  src={ispCurve}
+  alt="Line plot of ambient specific impulse against mixture ratio at a chamber pressure of 400 psia, with a separate curve for each nozzle expansion ratio between 3.3 and 5.8."
+  caption="Ambient specific impulse against mixture ratio at 400 psia, swept across expansion ratios — the trade behind the chamber and nozzle."
+/>
+
+The injector is a pintle, chosen for atomization and because it's easy to make
+and change. A stainless steel faceplate sits under an aluminum manifold plate
+carrying the propellant inlets and three ports for pressure transducers. The
+whole manifold comes in under 2 lb. The copper pintle tip sprays IPA out through
+radial slots into a sheet of nitrous coming down the annulus around it. The tip
+is made in two pieces so the slots can be cut with a slitting saw.
+
+<Figure
+  src={injectorSection}
+  alt="CAD cross-section through the injector manifold: nitrous and IPA fittings threaded into the top plate, the copper pintle tip running down the centerline, and the faceplate and chamber wall beneath."
+  caption="The injector manifold in section, showing the propellant inlets."
+/>
+
+<div class="figure-pair">
+  <Figure
+    src={pintleTip}
+    alt="CAD render of the copper pintle tip: a threaded body with a flange, narrowing to a nose at the bottom."
+    caption="The copper pintle tip."
+  />
+  <Figure
+    src={pintleSlots}
+    alt="CAD render of a copper ring with dozens of narrow radial slots cut around its circumference."
+    caption="The radial injection slots."
+  />
+</div>
+
+There are two chambers. A regeneratively cooled chamber for flight is still in
+design: a 3D-printed aluminum liner with its cooling channels built in, wrapped
+in a carbon-fiber structural jacket. The one built first is a heavy "battleship"
+ablative chamber for testing. Its cast phenolic liner wears away through each
+burn and is replaced between firings, with a graphite nozzle, so the stand can
+run up to three hot fires a day.
+
+<Figure
+  src={ablativeChamber}
+  alt="CAD cross-section of the ablative test chamber: the injector manifold at the top, a thick liner shown in tan lining the chamber, and a graphite nozzle converging and expanding at the bottom."
+  caption="The ablative test chamber in section: injector, liner, and graphite nozzle."
+/>
+
+The IPA pump needs to put out 550 psi. At a small impeller and a modest flow
+rate that means 20,000–30,000 rpm, which is too low a specific speed for a
+conventional impeller. So it's a Barske pump: straight radial blades in a
+concentric volute, simple enough to machine in-house and iterate on. For testing
+it's driven by an off-the-shelf RC-class brushless motor and motor controller on
+its own 6S battery, chosen for margin rather than mass. The flight hardware will
+be reselected once testing has measured current draw and efficiency.
+
+<div class="figure-pair">
+  <Figure
+    src={electropump}
+    alt="CAD render of the electropump assembly standing upright: a pump housing with fittings on top and a finned electric motor mounted beneath it."
+    caption="The electropump, motor below the pump."
+  />
+  <Figure
+    src={impeller}
+    alt="CAD renders of a straight-bladed Barske impeller above one half of the volute it spins inside."
+    caption="The Barske impeller and one half of its volute."
+  />
 </div>
 
 ## Flight tanks and feed system
 
-The tanks are the part of Prometheus furthest along into hardware. Each is a
-cylinder closed by a machined dome: the ports land on its face, a pair of O-ring
-grooves seals it against the tank wall, and a ring of lugs around the rim
-carries the bolt load. The first closures are already turned — the one in this
-page's banner came off the lathe in the shop — with the feed side around them
-drawn but not yet built: the fittings that land on the tank head, and the
-linkage that lets an actuator drive a valve from beside the line rather than
-sitting on top of it.
+The tanks are the part of Prometheus furthest along into hardware. Both are
+6061-T6 aluminum tubes rated for 900 psi. They share one closure design: a 2:1
+elliptical head, designed to the ASME pressure-vessel code. The nitrous tank
+carries 7.72 kg for the burn. The IPA tank carries 2.87 kg behind a domed
+piston. The first closures are already turned. The one in this page's banner
+came off the lathe in the shop.
 
 <Figure
   src={closureRender}
   alt="CAD render of a tank closure: a machined dome with threaded ports across its face, a ring of bolt lugs around the rim, and two O-ring grooves below them."
-  caption="The tank closure — ports on the face, lugs around the rim, O-ring grooves below."
+  caption="The unified tank closure: ports on the face, lugs around the rim, O-ring grooves below."
 />
 
 <div class="figure-pair">
@@ -68,22 +174,37 @@ sitting on top of it.
   />
   <Figure
     src={tankHead}
-    alt="CAD render of the top of a propellant tank, with fittings, a valve, and a pressurant hose landing on the closure."
-    caption="Fittings and the pressurant line on the tank head."
+    alt="CAD render of the top of the nitrous tank, with vent fittings, a valve, and a line landing on the closure."
+    caption="The vent assembly on the nitrous tank's upper closure."
   />
 </div>
+
+Both the closure and the piston are designed to a factor of safety of 1.5 at 900
+psi. In simulation the piston holds 1.7 with full pressure on its concave side.
+
+<div class="figure-pair">
+  <Figure
+    src={closureStress}
+    alt="Finite-element stress plot of the tank closure, its face and ring of lugs colored mostly blue for low stress."
+    caption="The closure under static load."
+  />
+  <Figure
+    src={pistonFos}
+    alt="Finite-element factor-of-safety plot of the domed IPA piston, colored from red to blue, with a minimum factor of safety of 1.7 noted in the plot header."
+    caption="Factor of safety across the IPA piston: minimum 1.7."
+  />
+</div>
+
+Flow is switched by servo-driven ball valves, a ½ in. main fuel valve and a ¾
+in. main oxidizer valve. A ¼ in. valve on the bleed line throttles 900 psi
+nitrous vapor down to hold the IPA tank near 325 psi. That one is already built
+and has been tested.
 
 <Figure
   src={valveActuator}
   alt="CAD render of a valve actuator: stacked mounting plates and a linkage arm driving the stem of a threaded valve body."
-  caption="A feed-system valve and the linkage that drives it."
+  caption="The ¼ in. bleed-line valve and the linkage that turns it."
 />
-
-<div class="content-todo">
-  TODO(content): tank volumes, operating and proof pressures, and material once
-  the design is frozen — and whether the electropump or a pressure-fed system
-  drives the flight configuration.
-</div>
 
 ## Avionics and ground control
 
@@ -91,8 +212,8 @@ Every earlier cold flow ran through a wired setup: a mess of cables, a handful
 of protoboards, an Arduino UNO, and an external DAQ, all driven from a laptop
 running LabVIEW over a long USB run. It worked, but it cost hours of wiring and
 troubleshooting before each test, and a liquid engine doesn't forgive a flaky
-connection the way a bench experiment does. The boards that sequence Prometheus
-are the division's answer to that pile of wires.
+connection the way a bench experiment does. The division's control boards
+started as the answer to that pile of wires, and TITAN is where they've led.
 
 ### Control board V1.0
 
@@ -145,18 +266,109 @@ of its first cold flow.
 
 <div class="content-todo">
   TODO(content): confirm current V2.0 status (bring-up vs. first test) before
-  this goes live, and update the paragraph above to match.
+  this goes live, and update the paragraph above to match. The TITAN design
+  record on Outline notes that an earlier ESP32-S3 selection was superseded by
+  TITAN's STM32F411, so check whether V2.0 is still in use at all.
 </div>
+
+### TITAN flight computer
+
+TITAN is the board that flies, and the same board runs the ground side too. One
+TITAN serves as the vehicle management system on the rocket and another as the
+ground management system, differing only in firmware role. Each is built around
+an STM32F411 BlackPill. A LoRa and 2.4 GHz BLE radio module provides LoRa
+telemetry down after launch and BLE to the ground system on the pad. A CAN link
+drives the electropump's motor controller. Three BDPI ports carry data and power
+to the peripheral boards over a single RJ45 cable each. BDPI is the team's own
+spec.
+
+<Figure
+  src={titanBoard}
+  alt="Annotated render of the TITAN v1.0 board, with boxes marking the LoRa and BLE electronics, the CAN connector, the battery connector, the servo board power connector, the STM32F411 Blackpill, and three BDPI peripheral board connectors."
+  caption="TITAN v1.0, annotated."
+/>
+
+<Figure
+  src={titanStack}
+  alt="Render of three circuit boards floating against a purple gradient: the TITAN flight computer in the middle, flanked by two peripheral boards."
+  caption="TITAN and its peripheral boards."
+/>
+
+The firmware has one rule: on the rocket, TITAN is the only thing that owns
+vehicle state and authorizes outputs. Every cycle, at 20 Hz or faster, it reads
+tank pressures and temperatures, pump speed, and valve position. It updates the
+flight state, commands the actuator board and the pump to hold IPA tank
+pressure, sends telemetry down, and writes the full state to onboard flash.
+Either computer can call an abort on its own. TITAN watches for stale data,
+out-of-limit pressures or temperatures, pump faults, valves that aren't where
+they were told to be, and lost links. Both run on Zephyr RTOS.
+
+<a
+  class="figure-link"
+  href="/images/firmware-architecture.webp"
+  aria-label="Open the full-size firmware architecture diagram"
+>
+  <Figure
+    src={firmwareArch}
+    alt="Block diagram of the proposed liquid-system firmware architecture: an operator laptop, system interface board, and ground management system across the top, linked by radio to the TITAN vehicle management system, which connects down to a sampling board, actuator board, VESC pump motor controller, and external flash, all on a shared Zephyr RTOS foundation."
+    caption="The proposed firmware architecture. Still open: sequence and fault policy, synchronization, radio budget, and peripheral interfaces. Select it to view full size."
+  />
+</a>
+
+## Ground system
+
+The test setup is built to run three tests a day. Between tests, only the deluge
+water needs refilling. The vehicle stack rides a vertical rail that pivots down
+to horizontal for loading, and fires into a thrust stand that measures thrust
+through a load cell. A ground fill station holds the nitrogen, nitrous, and IPA
+supply tanks, with a swing arm that carries the fill lines to the vehicle. At
+the end of fill, servo-driven winches pull the team's own quick disconnects off
+and swing the arm clear.
+
+<div class="figure-pair">
+  <Figure
+    src={fillStation}
+    alt="CAD render of the ground fill station: a steel frame holding three tall supply tanks, with a swing arm running out from its base."
+    caption="The ground fill station."
+  />
+  <Figure
+    src={testStand}
+    alt="CAD render of the test stack lowered to horizontal on its rail, clamped at one end to the blue upright of the test stand."
+    caption="The test stack pivoted down to horizontal for loading."
+  />
+</div>
+
+Fill is scripted down to the valve. IPA goes in first, under nitrogen pressure.
+Then nitrous fills until a camera sees liquid coming out of a vent dip tube,
+which marks the right fill level. Heating pads then bring the nitrous up to 900
+psi over about ten minutes. The sequence ends in a built-in hold, so a slow soak
+delays T-0 rather than shifting it. In the last two seconds the pump spins up,
+the igniter lights, the deluge opens, and the main valves open, IPA a
+quarter-second ahead of the nitrous.
+
+<a
+  class="figure-link"
+  href="/images/fill-sequence.webp"
+  aria-label="Open the full-size fill sequence timeline"
+>
+  <Figure
+    src={fillSequence}
+    alt="Timeline chart of the fill sequence from T-11:30 to T-0:05, with ground valve steps for IPA and NOx fill above vehicle vent steps, ending in a thermal soak that brings the NOx to 900 psi and a built-in hold before the terminal count."
+    caption="The fill sequence, ground valves above and vehicle valves below, from IPA fill through the nitrous thermal soak to the terminal count. Select it to view full size."
+  />
+</a>
 
 ## Where Prometheus stands today
 
-The photographs below are from the shop this term, as the first Prometheus parts
-come off the lathe. The project is active, aimed at getting from drawing to a
-hot-fire test vehicle in as little time as possible.
+Prometheus has been through its critical design review. The avionics boards are
+designed, and the first tank closures are coming off the lathe. Packaging
+everything into the 6 in. airframe is out of scope for this academic year. The
+work now is proving the system on the ground, in cold flow and then hot fire on
+the stand. The photographs below are from the shop this term.
 
 <div class="content-todo">
-  TODO(content): current build/test status and the next milestone on the path to
-  hot fire — keep this section current as the campaign progresses rather than
-  letting it go stale after publishing. Name the parts in the build photographs
-  below, too; their captions describe the cut, not the component.
+  TODO(content): the date of the first cold flow or hot fire once it's
+  scheduled, and keep this section current as the campaign progresses. Name the
+  parts in the build photographs below, too; their captions describe the cut,
+  not the component.
 </div>
