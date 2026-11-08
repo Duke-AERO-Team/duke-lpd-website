@@ -1,14 +1,62 @@
 ---
 import { Image } from "astro:assets";
-import { ArrowRight, Flame } from "@lucide/astro";
+import { CircuitBoard, Cog, Cpu, Droplets, Flame, Gauge } from "@lucide/astro";
 import Embers from "./Embers.astro";
+import injectorManifold from "../assets/home/injector-manifold.webp";
+import tankClosure from "../assets/home/tank-closure.webp";
+import titanBoard from "../assets/home/titan-board.webp";
 
-// Cards and the /[subteam] pages read the same array, so a name or a lead can't
-// drift between the two. Each card is backed by that subteam's own work rather
-// than stock imagery — the crops were baked to a common level because the sources
-// disagree wildly: the CAD render sits on white and had its lightness inverted,
-// while the P&ID is near-black line art that needed lifting.
+// One short section per subteam, in the shape dukerocketry.com gives each of
+// its own: label, headline, one sentence, then a single signature element.
+// Each section shows one piece of its own hardware and a detail block that
+// differs on purpose: none, a set of numbers, a list of boards. The layouts
+// differ too (centred, then split one way, then the other), because three
+// identical blocks read as a template. The hardware renders are cut out of their
+// CAD backgrounds so each part floats on the page like the reference site's
+// avionics bay, rather than sitting in a white box that would outshine
+// everything around it.
+//
+// Names and slugs come from the shared array so the section ids /team links to
+// can't drift. The copy is inline because nothing else renders it. Numbers
+// are from the Prometheus Critical Design Review.
 import { subteams } from "../data/subteams";
+
+const team = (slug: string) => {
+  const found = subteams.find((t) => t.slug === slug);
+  if (!found) throw new Error(`AboutSection: no subteam "${slug}"`);
+  return found;
+};
+const combustion = team("combustion");
+const fluids = team("fluids");
+const controls = team("controls");
+
+const fluidStats = [
+  { value: "900", unit: "psi", label: "tank design pressure" },
+  {
+    value: "325",
+    unit: "psi",
+    label: "IPA tank pressure, held with nitrous vapor",
+  },
+  { value: "7.72", unit: "kg", label: "of nitrous loaded for one burn" },
+];
+
+const boards = [
+  {
+    icon: Cpu,
+    title: "TITAN Flight Computer",
+    desc: "Owns vehicle state and every output. One board design runs both the rocket and the ground system, with LoRa and BLE radios onboard.",
+  },
+  {
+    icon: Gauge,
+    title: "Sampling Board",
+    desc: "Reads and calibrates tank pressures and temperatures, and tells TITAN how fresh each reading is.",
+  },
+  {
+    icon: Cog,
+    title: "Actuator Board",
+    desc: "Drives the servo-actuated valves and reports back where each one actually is.",
+  },
+];
 ---
 
 <section id="about" class="relative bg-night">
@@ -65,52 +113,184 @@ import { subteams } from "../data/subteams";
       </p>
     </div>
 
-    <div class="mt-20 grid gap-6 md:mt-28 md:grid-cols-3">
-      {
-        subteams.map((team) => (
-          <article class="group relative isolate flex min-h-96 flex-col justify-end overflow-hidden border border-white/10 md:min-h-120">
-            <Image
-              src={team.card}
-              alt={team.cardAlt}
-              widths={[450, 900]}
-              sizes="(min-width: 768px) 33vw, 100vw"
-              class="absolute inset-0 -z-10 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-            />
-            {/* The gray wash that unifies three very different drawings... */}
-            <div
-              class="absolute inset-0 -z-10 bg-steel/15"
-              aria-hidden="true"
-            />
-            {/* ...and a foot of dark under the copy, because a flat wash over line
-                art leaves body text sitting on whatever the drawing happens to do. */}
-            <div
-              class="absolute inset-0 -z-10 bg-linear-to-t from-night via-night/75 to-transparent"
-              aria-hidden="true"
-            />
+    {
+      /* The three subteams, in roster order. Centred, where the masthead above
+        ranges left: these read as three short statements under one heading.
+        scroll-mt clears the fixed header for /team's `/#slug` links. */
+    }
+    <section
+      id={combustion.slug}
+      aria-labelledby="combustion-heading"
+      class="mt-32 scroll-mt-24 md:mt-44"
+    >
+      <div class="flex flex-col items-center gap-2 text-center">
+        <div class="flex items-center gap-2">
+          <Flame class="size-5 text-accent-orange md:size-6" />
+          <p
+            class="font-display text-xs font-bold tracking-[0.14em] text-accent-peach uppercase md:text-base"
+          >
+            {combustion.name}
+          </p>
+        </div>
+        <h3
+          id="combustion-heading"
+          class="font-display text-[clamp(32px,3.8vw,64px)] leading-none font-bold text-balance text-white"
+        >
+          Injector to Nozzle
+        </h3>
+        <p
+          class="mt-4 max-w-190 text-sm leading-normal text-muted md:text-base"
+        >
+          We design, machine, and test the hardware that turns propellant into
+          thrust: a pintle injector with a copper tip, an ablative chamber
+          rebuilt between test fires, and a regeneratively cooled chamber meant
+          to fly.
+        </p>
+      </div>
+      <figure class="mx-auto mt-10 max-w-140 md:mt-12">
+        <Image
+          src={injectorManifold}
+          alt="CAD render of the Prometheus injector manifold: a round aluminum plate ringed with bolts, with three large propellant fittings and three smaller purple instrumentation fittings on top."
+          widths={[480, 800, 1120]}
+          sizes="(min-width: 768px) 560px, 80vw"
+          class="mx-auto h-auto w-[82%] drop-shadow-[0_24px_48px_rgba(0,0,0,0.55)]"
+        />
+        <figcaption class="mt-6 text-center text-xs text-balance text-muted">
+          The Prometheus injector manifold, propellant fittings on top.
+        </figcaption>
+      </figure>
+    </section>
 
-            <div class="p-6">
-              <p class="font-mono text-xs text-accent-peach">{team.index}</p>
-              <h3 class="mt-3 font-display text-lg font-bold text-white">
-                {team.name}
-              </h3>
-              {/* Reserved to the longest description in the set. The cards are
-                  bottom-aligned, so without a common floor here a two-line card
-                  pushes its index a whole line above its neighbours'. */}
-              <p class="mt-2 min-h-[4.25rem] text-sm leading-relaxed text-white/80">
-                {team.summary}
-              </p>
-              <a
-                href={`/${team.slug}`}
-                class="mt-5 inline-flex items-center gap-2 bg-white px-4 py-2.5 font-display text-xs font-bold uppercase tracking-[0.16em] text-night transition-colors hover:bg-accent-peach"
-              >
-                Explore
-                <span class="sr-only">{team.name}</span>
-                <ArrowRight class="size-3.5" aria-hidden="true" />
-              </a>
-            </div>
-          </article>
-        ))
-      }
-    </div>
+    {
+      /* Fluids and Controls split into text beside hardware, mirrored, so the
+        three read as a centred opener and then a zig and a zag rather than one
+        frame three times. Below lg each stacks text-first, the same order a
+        reader meets it in. */
+    }
+    <section
+      id={fluids.slug}
+      aria-labelledby="fluids-heading"
+      class="mt-32 grid scroll-mt-24 items-center gap-12 md:mt-44 lg:grid-cols-2 lg:gap-16"
+    >
+      <div>
+        <div class="flex items-center gap-2">
+          <Droplets class="size-5 text-accent-orange md:size-6" />
+          <p
+            class="font-display text-xs font-bold tracking-[0.14em] text-accent-peach uppercase md:text-base"
+          >
+            {fluids.name}
+          </p>
+        </div>
+        <h3
+          id="fluids-heading"
+          class="mt-2 font-display text-[clamp(32px,3.8vw,64px)] leading-none font-bold text-balance text-white"
+        >
+          Tank to Injector
+        </h3>
+        <p class="mt-6 max-w-xl text-sm leading-normal text-muted md:text-base">
+          We own every step from tank to injector: propellant tanks and closures
+          designed and turned in-house, the servo-driven valves and plumbing
+          that route propellant, and the fill system that loads it.
+        </p>
+        <dl
+          class="mt-10 grid max-w-xl grid-cols-3 gap-6 border-t border-white/10 pt-8"
+        >
+          {
+            fluidStats.map((stat) => (
+              /* dt follows dd visually but precedes it in the DOM, as a <dl>
+                  needs; justify-end packs a reversed column from the top, so
+                  the numbers share a line however far each label wraps. */
+              <div class="flex flex-col-reverse justify-end">
+                <dt class="mt-1 text-xs text-muted md:text-sm">{stat.label}</dt>
+                <dd class="font-display text-2xl font-bold text-steel-light md:text-4xl">
+                  {stat.value}
+                  <span class="ml-1 text-base text-muted md:text-xl">
+                    {stat.unit}
+                  </span>
+                </dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+      <figure class="mx-auto w-full max-w-140">
+        <Image
+          src={tankClosure}
+          alt="CAD render of the Prometheus tank closure: a domed aluminum head with threaded ports on its face, a ring of bolt lugs around the rim, and two orange O-rings below."
+          widths={[480, 800, 1086]}
+          sizes="(min-width: 1024px) 560px, 90vw"
+          class="mx-auto h-auto w-full drop-shadow-[0_24px_48px_rgba(0,0,0,0.55)]"
+        />
+        <figcaption class="mt-6 text-center text-xs text-balance text-muted">
+          The tank closure, one design shared by both propellant tanks.
+        </figcaption>
+      </figure>
+    </section>
+
+    <section
+      id={controls.slug}
+      aria-labelledby="controls-heading"
+      class="mt-32 grid scroll-mt-24 items-center gap-12 md:mt-44 lg:grid-cols-2 lg:gap-16"
+    >
+      <div>
+        <div class="flex items-center gap-2">
+          <CircuitBoard class="size-5 text-accent-orange md:size-6" />
+          <p
+            class="font-display text-xs font-bold tracking-[0.14em] text-accent-peach uppercase md:text-base"
+          >
+            {controls.name}
+          </p>
+        </div>
+        <h3
+          id="controls-heading"
+          class="mt-2 font-display text-[clamp(32px,3.8vw,64px)] leading-none font-bold text-balance text-white"
+        >
+          Sensor to Valve
+        </h3>
+        <p class="mt-6 max-w-xl text-sm leading-normal text-muted md:text-base">
+          We design, build, and program the electronics that read every sensor,
+          command every valve, and run a firing sequence the same way every
+          time, from the test stand to the flight vehicle.
+        </p>
+        {
+          /* A ruled list rather than the boxed grid the reference uses, so this
+            section's detail has a different shape from Fluids' numbers above. */
+        }
+        <ul
+          class="mt-10 max-w-xl divide-y divide-white/10 border-y border-white/10"
+        >
+          {
+            boards.map((board) => (
+              <li class="flex gap-4 py-5">
+                <board.icon
+                  class="mt-0.5 size-5 shrink-0 text-accent-orange opacity-80"
+                  aria-hidden="true"
+                />
+                <div>
+                  <h4 class="font-display text-base font-bold text-steel-light">
+                    {board.title}
+                  </h4>
+                  <p class="mt-1 text-sm leading-relaxed text-muted">
+                    {board.desc}
+                  </p>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <figure class="mx-auto w-full max-w-120 lg:order-first">
+        <Image
+          src={titanBoard}
+          alt="CAD render of the TITAN v1.0 flight computer at an angle: a green circuit board with an antenna connector, a Core2021 radio module, a BlackPill microcontroller module marked Prometheus, and three RJ45 ports along one edge."
+          widths={[480, 800, 1100]}
+          sizes="(min-width: 1024px) 480px, 90vw"
+          class="mx-auto h-auto w-full drop-shadow-[0_24px_48px_rgba(0,0,0,0.55)]"
+        />
+        <figcaption class="mt-6 text-center text-xs text-balance text-muted">
+          TITAN v1.0, the Prometheus flight computer.
+        </figcaption>
+      </figure>
+    </section>
   </div>
 </section>

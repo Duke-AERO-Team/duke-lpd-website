@@ -172,26 +172,6 @@
   color: var(--color-accent-peach);
 }
 
-/* The subteam pages run prose the full width of the page's own column, which
-   is what the photo grids want and far more than a line of text can use. So
-   the photo grids keep the column — landing on the same edges as the rules and
-   the heading above, which is what centres them on the page — while the text
-   stops at a measure and stays on the column's left edge with everything else
-   the page ranges left. The measure is absolute rather than in `ch` on
-   purpose: `ch` resolves against each element's own type size, which would
-   hand a 28px heading a 950px line and leave it visibly wider than the
-   paragraph under it. One value keeps every text block on one left edge. */
-.page-prose-wide > p,
-.page-prose-wide > h2,
-.page-prose-wide > h3,
-.page-prose-wide > ul,
-.page-prose-wide > ol,
-.page-prose-wide > blockquote,
-.page-prose-wide > .photo-note,
-.page-prose-wide > .content-todo {
-  max-width: 38rem;
-}
-
 /* Figures take their spacing from the prose rhythm around them rather than
    carrying the outer margin the old end-of-page gallery figure needed. Only
    the UA's side and bottom margins are reset: a blanket `margin: 0` here
@@ -218,8 +198,9 @@
   border-color: rgb(255 255 255 / 0.3);
 }
 
-/* Two boards side by side reads as one comparison rather than two unrelated
-   photos — used for the V2.0 control/sampling split. */
+/* Two related figures side by side read as one comparison rather than two
+   unrelated images. Pairs should share an aspect ratio: the cells stretch to
+   the taller one, so a mismatched pair leaves one frame half empty. */
 .page-prose .figure-pair {
   display: grid;
   gap: 1rem;
@@ -229,64 +210,4 @@
   .page-prose .figure-pair {
     grid-template-columns: 1fr 1fr;
   }
-}
-
-/* Three photos of the same room, cropped to one shape so they read as a single
-   glance rather than three separate arguments stacked at full column width.
-   On narrow screens three equal thumbnails would be too small to read, so the
-   first photo leads across both columns and the other two sit beneath it. */
-.page-prose .photo-trio {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
-}
-
-.page-prose .photo-trio > :first-child {
-  grid-column: span 2;
-}
-
-@media (min-width: 640px) {
-  .page-prose .photo-trio {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .page-prose .photo-trio > :first-child {
-    grid-column: auto;
-  }
-}
-
-/* Photo-led subteam pages, where the photographs carry the page and their
-   captions are the copy rather than notes on it. Two columns, so a pair of
-   shots reads as one comparison, plus `.shot-wide` for an image that has to
-   stand on its own. Rows start-align: the two captions in a row are rarely the
-   same length, and stretching the shorter figure to match would pull its image
-   away from its own caption. */
-.page-prose .shot-grid {
-  display: grid;
-  gap: 2.5rem;
-}
-
-@media (min-width: 900px) {
-  .page-prose .shot-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    align-items: start;
-    gap: 3.5rem 2rem;
-  }
-
-  .page-prose .shot-grid > .shot-wide {
-    grid-column: 1 / -1;
-  }
-}
-
-/* One caption for a grid of photos, in place of the three figcaptions that
-   would otherwise crowd thumbnails a third of the column wide. */
-.page-prose .photo-note {
-  font-size: 0.8125rem;
-  line-height: 1.6;
-  color: rgb(255 255 255 / 0.55);
-}
-
-.page-prose .photo-trio + .photo-note,
-.page-prose .figure-pair + .photo-note {
-  margin-top: 0.75rem;
 }

@@ -13,8 +13,8 @@ Cloudflare (via `@astrojs/cloudflare`, `imageService: "compile"` — there is no
 worker/runtime image endpoint, so all image processing happens at build time).
 
 It started as a single page and has since grown a few routes (a detail page per
-project and one page per subteam), but it is still deliberately small: local
-data files instead of content collections, no CMS.
+project and a team roster), but it is still deliberately small: local data files
+instead of content collections, no CMS.
 
 ## Relationship to duke-aero-website
 
@@ -34,7 +34,7 @@ Key differences from that reference, by design:
   (`lpd.dukerocketry.com`), not the whole club. The main site is multi-page
   (`team`, `sponsors`, `join`, `donate`, `past-projects/[id]` with MDX content
   collections, EXIF-tagged photo galleries, a sponsor marquee, etc.); this site
-  has a homepage, a detail page per project, and three subteam pages, with **no
+  has a homepage, a detail page per project, and a team roster, with **no
   content collections and no sponsors/team/join infrastructure**. Don't pull
   that machinery in unless the site's scope actually grows to need it — two
   projects and three subteams do not earn a content collection.
@@ -95,10 +95,10 @@ trailing slash and take that redirect.
 
 ## Architecture
 
-Eight routes, all wrapped by `src/layouts/Layout.astro` (head/meta/OG
-tags/fonts). The two detail layouts — `ProjectDetail.astro` and
-`SubteamDetail.astro` — sit between `Layout` and an MDX page, taking only a
-`slug` in that page's frontmatter and looking the rest up from the data files:
+Five routes, all wrapped by `src/layouts/Layout.astro` (head/meta/OG
+tags/fonts). `ProjectDetail.astro` sits between `Layout` and each project's MDX
+page, taking only a `slug` in that page's frontmatter and looking the rest up
+from `src/data/projects.ts`:
 
 - `src/pages/index.astro` — `Hero` → `AboutSection` → `PhotoWall` →
   `ProjectsSection` → `Footer`. `Header.astro` is imported inside `Hero` rather
@@ -107,18 +107,21 @@ tags/fonts). The two detail layouts — `ProjectDetail.astro` and
   `id="projects"` section) is the only project listing on the site, and every
   internal "all projects" link points at `/#projects` rather than a separate
   route. The nav itself has no generic "Projects" link, just `Prometheus` →
-  `/projects/prometheus` since that's the one currently running.
+  `/projects/prometheus` since that's the one currently running. `AboutSection`
+  carries the division masthead and then one short section per subteam
+  (`id="combustion"`, `"fluids"`, `"controls"`), patterned on how
+  dukerocketry.com gives each of its subteams a homepage section: label,
+  headline, one sentence, one signature element. The signatures differ on
+  purpose — a cut-out part, three numbers, three board cells — so keep them
+  different rather than templating them. There are no per-subteam pages; they
+  were folded into these sections, and their old URLs now 404.
 - `src/pages/projects/eno.mdx`, `src/pages/projects/prometheus.mdx` — the two
   project detail pages, via `src/layouts/ProjectDetail.astro`.
-- `src/pages/combustion.mdx`, `src/pages/fluids.mdx`, `src/pages/controls.mdx` —
-  one page per subteam, via `src/layouts/SubteamDetail.astro`. These replaced a
-  single `[subteam].astro` `getStaticPaths` route so each subteam has a file to
-  write a narrative into; their bodies are empty for now, and the layout renders
-  no prose wrapper at all until one has content.
 - `src/pages/team.astro` — the roster. Division lead first, then a row per
   subteam reading its `members` array, first entry labelled as that subteam's
-  lead. Headshots are globbed from `src/assets/team/`, so adding a member is a
-  row in the data plus a dropped `.webp`.
+  lead. Each subteam name links to its homepage section (`/#${slug}`). Headshots
+  are globbed from `src/assets/team/`, so adding a member is a row in the data
+  plus a dropped `.webp`.
 - `src/pages/404.astro`
 
 Key patterns to follow when extending this site:
