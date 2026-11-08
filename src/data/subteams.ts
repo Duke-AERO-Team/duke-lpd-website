@@ -46,6 +46,10 @@ export const subteams: Subteam[] = [
     name: "Electrical & Controls",
     members: [
       { name: "Michael Danley", study: "ECE, CS '29", photo: "michael-danley" },
+      { name: "Andrew Chen", study: "ECE, CS '29", photo: "andrew-chen" },
+      { name: "David John", study: "MechE '29", photo: "david-john" },
+      { name: "Juan Varela", study: "ECE, CS '29", photo: "juan-varela" },
+      { name: "Ben Wang", study: "ECE, CS '29", photo: "ben-wang" },
     ],
   },
 ];
