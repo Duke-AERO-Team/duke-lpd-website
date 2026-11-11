@@ -26,6 +26,8 @@ export const subteams: Subteam[] = [
     name: "Combustion Devices",
     members: [
       { name: "Archer White", study: "MechE/Aero '29", photo: "archer-white" },
+      { name: "Sean Adams", study: "MechE '28", photo: "sean-adams" },
+      { name: "Thomas Han", study: "MechE '28", photo: "thomas-han" },
     ],
   },
   {
@@ -37,6 +39,11 @@ export const subteams: Subteam[] = [
         name: "Ethan Rosenfeld",
         study: "MechE/Physics '29",
         photo: "ethan-rosenfeld",
+      },
+      {
+        name: "Arthur Gwozdz",
+        study: "MechE/Aero '27",
+        photo: "arthur-gwozdz",
       },
     ],
   },
